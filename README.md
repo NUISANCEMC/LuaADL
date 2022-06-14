@@ -32,9 +32,6 @@ int main(int argc, char *const argv[]) {
 
     if(prs.select(evt)){
 
-      projections.clear();
-      weights.clear();
-
       std::vector<double> projections = prs.project(evt);
       std::vector<double> weights = prs.weight(evt);
 
