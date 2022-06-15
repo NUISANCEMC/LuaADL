@@ -1,4 +1,7 @@
-function projelect(in_GenEvent, out_Projections)
+--Check that we have LuaADL
+assert(LuaADL)
+
+function filter_and_project(in_GenEvent, out_Projections)
 
   print("projeclecting event: ", in_GenEvent.event_number)
 
@@ -15,14 +18,7 @@ function projelect(in_GenEvent, out_Projections)
     return false 
   end
 
-  assert(vert:particles_in() and vert:particles_in():size() > 0)
-
-  for _,part in ipairs(vert:particles_in()) do
-    if part.status == 4 and part.pid == 14 then 
-      ISnu = part 
-      break 
-    end
-  end
+  ISnu = LuaADL.sel.part.beam(in_GenEvent, 14)
 
   if not ISnu then
     print("[CUT]: no IS nu")
@@ -32,22 +28,9 @@ function projelect(in_GenEvent, out_Projections)
   print("add proj: ", ISnu.momentum.e)
   out_Projections:add(ISnu.momentum.e)
 
-  nnuc = 0
-  nother = 0
-
-  FSmu = nil
-
-  for _,part in ipairs(vert:particles_out()) do
-    if part.status == 1 then
-      if part.pid == 13 and not FSmu then 
-        FSmu = part 
-      elseif part.pid == 2212 or part.pid == 2112 then
-        nnuc = nnuc + 1
-      else
-        nother = nother + 1
-      end
-    end
-  end
+  nnuc = LuaADL.sel.parts.out(in_GenEvent, {2212, 2112}):size()
+  nother = LuaADL.sel.parts.other_out(in_GenEvent, {13, 2212, 2112}):size()
+  FSmu = LuaADL.sel.part.out.highest_momentum(in_GenEvent, 13)
 
   if not FSmu then
     print("[CUT]: no FS muon")
@@ -58,7 +41,12 @@ function projelect(in_GenEvent, out_Projections)
   out_Projections:add(FSmu.momentum.e)
 
   if nother > 0 then
-    print("[CUT]: other particles")
+    print("[CUT]: other particles: ", nother)
+
+    for _,j in ipairs(LuaADL.sel.parts.other_out(in_GenEvent, {13, 2212, 2112})) do
+      print(j:to_str())
+    end
+
     return false
   end
 

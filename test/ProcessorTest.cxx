@@ -1,4 +1,4 @@
-#include "LuaADL/Projelector.hxx"
+#include "LuaADL/Processor.hxx"
 
 #include "HepMC3/ReaderAscii.h"
 #include "HepMC3/WriterAscii.h"
@@ -104,7 +104,12 @@ int main(int argc, char *const argv[]) {
 
   HepMC3::ReaderAscii rdr(ss);
 
-  LuaADL::Projelector prj(argv[1]);
+  LuaADL::Processor prcs(argv[1]);
+
+  std::cout << "Has filter: " << prcs.has_filter() << std::endl;
+  std::cout << "Has Project: " << prcs.has_project() << std::endl;
+  std::cout << "Has Weight: " << prcs.has_weight() << std::endl;
+  std::cout << "Has Filter and Project: " << prcs.has_filter_and_project() << std::endl;
 
   while(!rdr.failed()){
     HepMC3::GenEvent evt;
@@ -113,11 +118,11 @@ int main(int argc, char *const argv[]) {
     if(rdr.failed()){
       break;
     }
-
+    
     HepMC3::Print::listing(evt);
 
     std::vector<double> projections;
-    bool passed = prj.projelect(evt, projections);
+    bool passed = prcs.filter_and_project(evt, projections);
 
     std::cout << "Event: " << (passed ? "passed selection":"was cut") << std::endl;
     std::cout << "Projections: " << std::endl;

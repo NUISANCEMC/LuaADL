@@ -134,5 +134,5 @@ endif()
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
-add_executable(ProjelectorTest test/ProjelectorTest.cxx)
-target_link_libraries(ProjelectorTest HepMC3 sol2)
+add_executable(ProcessorTest test/ProcessorTest.cxx)
+target_link_libraries(ProcessorTest HepMC3 sol2)
