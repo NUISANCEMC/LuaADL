@@ -1,6 +1,7 @@
 #pragma once
 
 #include "LuaADL/Selectors.hxx"
+#include "LuaADL/Projectors.hxx"
 
 #include "HepMC3/LuaInterface.hxx"
 
@@ -10,7 +11,7 @@ namespace LuaADL {
 class Processor {
 
   HepMC3::LuaInterface LI;
-  // Projectors Pj;
+  Projectors Pj;
   Selectors Sl;
 
   sol::function filter_function;
@@ -19,7 +20,7 @@ class Processor {
   sol::function filter_and_project_function;
 
 public:
-  Processor(std::string const &filename) : Sl(LI.lua) {
+  Processor(std::string const &filename) : Pj(LI.lua), Sl(LI.lua) {
     LI.lua.safe_script_file(filename);
 
     filter_function = LI.lua["filter"];

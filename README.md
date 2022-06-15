@@ -43,38 +43,70 @@ int main(int argc, char *const argv[]) {
 ```
 
 ```lua
-require "math"
+--Check that we have LuaADL
+assert(LuaADL)
 
-function select(GenEvent)
+function isCC0Pi(in_GenEvent)
+  if not LuaADL.sel.part.beam(in_GenEvent, 14) then return false end
 
-  muon = select.final_state(GenEvent, 13, select.highest_momentum)
+  local nnother = LuaADL.sel.parts.other_out(in_GenEvent, {13, 2212, 2112}):size()
+  if not nnother == 0 then return false end
 
-  -- If there are no final state muons, cut
-  if not muon then return false end
+  if not LuaADL.sel.part.out.highest_momentum(in_GenEvent, 13) then 
+    return false 
+  end
 
-  -- Apply true phase space cuts
-  return (muon.momentum:length() > 0.25) 
-        and (muon.momentum:theta() < math.rad(20))
+  return true
+end
+
+function isTrueCCQE(in_GenEvent)
+  if not in_GenEvent:vertices() or 
+    in_GenEvent:vertices():size() == 0 or
+    not in_GenEvent:vertices()[1] then
+    return false
+  end
+
+  local attr = in_GenEvent:vertices()[1]:attribute_as_int("HardScatterMode")
+
+  return attr and (attr:value() == 1)
+end
+
+function filter(in_GenEvent)
+  return isTrueCCQE(in_GenEvent) and isCC0Pi(in_GenEvent)
+end
+
+function project(in_GenEvent, out_projections)
+
+  local ISnu = LuaADL.sel.part.beam(in_GenEvent, 14)
+  print("Enu: ", ISnu.momentum.e)
+  out_projections:add(ISnu.momentum.e)
+
+  local FSmu = LuaADL.sel.part.out.highest_momentum(in_GenEvent, 13)
+  print("Pmu: ", FSmu.momentum:length())
+  out_projections:add(FSmu.momentum:length())
+
+  local q0 = LuaADL.proj.parts.q0(ISnu,FSmu)
+  print("q0: ", q0)
+  out_projections:add(q0)
+
+  local q3 = LuaADL.proj.parts.q3(ISnu,FSmu)
+  print("q3: ", q3)
+  out_projections:add(q3)
+
+  local Q2 = LuaADL.proj.parts.Q2(ISnu,FSmu)
+  print("Q2: ", Q2)
+  out_projections:add(Q2)
+
+  local cpt = LuaADL.proj.parts.pt(LuaADL.sel.parts.out(in_GenEvent, {13, 2212}))
+  print("charged pt: ", cpt)
+  out_projections:add(cpt)
 
 end
 
-function project(GenEvent, out_projections)
-  muon = select.particles.final_state(GenEvent, 13, select.highest_momentum)
-  numu = select.particles.initial_state(GenEvent, 14)
-
-  if (not muon) or (not numu) then return end
-
-  -- Add some event projections
-  out_projections:add(muon.momentum.e)
-  out_projections:add(project.pt(select.particles.final_states(GenEvent, select.particles.charged)));
-  out_projections:add(project.W(select.particles.final_states(GenEvent)));
-end
-
-function weight(GenEvent, out_weights)
-  muon = select.particles.final_state(GenEvent, 13, select.highest_momentum)
-
-  -- Weight based on the Q2 calculated from the muon production vertex
-  out_weights:add(1.0/project.Q2(muon:production_vertex()))
+function weight(in_GenEvent, out_weights)
+  local ISnu = LuaADL.sel.part.beam(in_GenEvent, 14)
+  local FSmu = LuaADL.sel.part.out.highest_momentum(in_GenEvent, 13)
+  out_weights:add(1.0/LuaADL.proj.parts.Q2(ISnu,FSmu))
 end
 
 ```
@@ -118,17 +150,32 @@ Functions that select particles and vertices from `GenEvent`s
 Functions that project out kinematic quantities from particles or sequences of particles
 
 ```lua
-  -- ADL.proj.part
+  -- Most functions return doubles, a return value of 0xdeadbeef indicates an error
+  -- This usually occurs because the function was passed an empty shared_ptr
+
+  -- Two particle functions
   ----------------
+  ADL.proj.parts.q0(part1, part2) -- calculate the energy transfer between two particles
   ADL.proj.parts.q0({part1, part2, ...}) -- calculate the energy transfer between the first two particles in a sequence
+
+  ADL.proj.parts.q3(part1, part2) -- calculate the 3momentum transfer between two particles
   ADL.proj.parts.q3({part1, part2, ...}) -- calculate the 3momentum transfer between the first two particles in a sequence
+
+  ADL.proj.parts.Q2(part1, part2) -- calculate the 4momentum transfer between two particles
   ADL.proj.parts.Q2({part1, part2, ...}) -- calculate the 4momentum transfer between the first two particles in a sequence
+
+  ADL.proj.parts.theta(part1, part2) -- calculate the opening angle between two particles
   ADL.proj.parts.theta({part1, part2, ...}) -- calculate the opening angle between the first two particles in a sequence
+
+  ADL.proj.parts.costheta(part1, part2) -- calculate the cosine of the opening angle between two particles
   ADL.proj.parts.costheta({part1, part2, ...}) -- calculate the cosine of the opening angle between the first two particles in a sequence
 
+  -- N particle functions
+  ----------------
   ADL.proj.parts.W({part1, part2, ...}) -- calculate the invariant mass of a sequence of particles
-  ADL.proj.parts.pt({part1, part2, ...}) -- calculate the transverse momentum from the 3momentum sum of a sequence of particles
-  ADL.proj.parts.pmiss({part1, part2, ...}, {part1, part2, ...}) -- calculate the missing 3momentum between two sequences of particles
-  ADL.proj.parts.emiss({part1, part2, ...}, {part1, part2, ...}) -- calculate the missing total energy between two sequences of particles
+  ADL.proj.parts.pt({part1, part2, ...}) -- calculate the magnitude of the transverse momentum from the 3momentum sum of a sequence of particles
+
+  -- Returns a HepMC3::FourVector, pmiss.x == 0xdeadbeef for failure 
+  ADL.proj.parts.pmiss({part1, part2, ...}, {part1, part2, ...}) -- calculate the missing 4momentum between two sequences of particles
 
 ```

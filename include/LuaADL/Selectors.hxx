@@ -19,16 +19,6 @@ public:
   static const int kFirst = 0;
   static const int kHighestMomentum = 1;
 
-  // static const std::vector<int> nucleon_pdgs = {};
-  // static const std::vector<int> matter_nucleon_pdgs = {};
-
-  // static const std::vector<int> lepton_pdgs = {};
-  // static const std::vector<int> neutrino_pdgs = {};
-  // static const std::vector<int> charged_lepton_pdgs = {};
-
-  // static const std::vector<int> pion_pdgs = {};
-  // static const std::vector<int> charged_pion_pdgs = {};
-
   template <int status, bool select_from_pdg_list = true>
   static std::vector<HepMC3::ConstGenParticlePtr>
   particles(HepMC3::GenEvent const &evt, std::vector<int> pdgs) {
@@ -103,8 +93,9 @@ public:
   }
 
   Selectors(sol::state &lua) {
-    lua["LuaADL"] = lua.create_table();
-
+    if (!lua["LuaADL"]) {
+      lua["LuaADL"] = lua.create_table();
+    }
     lua["LuaADL"]["sel"] = lua.create_table();
     lua["LuaADL"]["sel"]["part"] = lua.create_table();
     lua["LuaADL"]["sel"]["parts"] = lua.create_table();

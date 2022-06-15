@@ -62,7 +62,8 @@ std::string TestFile() {
 
     vertex->add_particle_out(GenerateParticle(kObservableStatus, 13, 0.6, 40));
     vertex->add_particle_out(GenerateParticle(kObservableStatus, 2212, 0.2, 0));
-    vertex->add_particle_out(GenerateParticle(kObservableStatus, 2212, 0.56, 12));
+    vertex->add_particle_out(
+        GenerateParticle(kObservableStatus, 2212, 0.56, 12));
 
     vertex->add_attribute("HardScatterMode",
                           std::make_shared<HepMC3::IntAttribute>(1));
@@ -82,7 +83,8 @@ std::string TestFile() {
 
     vertex->add_particle_out(GenerateParticle(kObservableStatus, 13, 0.35, 40));
     vertex->add_particle_out(GenerateParticle(kObservableStatus, 2212, 0.2, 0));
-    vertex->add_particle_out(GenerateParticle(kObservableStatus, 2212, 0.3, 15));
+    vertex->add_particle_out(
+        GenerateParticle(kObservableStatus, 2212, 0.3, 15));
     vertex->add_particle_out(GenerateParticle(kObservableStatus, 211, 0.3, 15));
 
     vertex->add_attribute("HardScatterMode",
@@ -109,25 +111,29 @@ int main(int argc, char *const argv[]) {
   std::cout << "Has filter: " << prcs.has_filter() << std::endl;
   std::cout << "Has Project: " << prcs.has_project() << std::endl;
   std::cout << "Has Weight: " << prcs.has_weight() << std::endl;
-  std::cout << "Has Filter and Project: " << prcs.has_filter_and_project() << std::endl;
+  std::cout << "Has Filter and Project: " << prcs.has_filter_and_project()
+            << std::endl;
 
-  while(!rdr.failed()){
+  while (!rdr.failed()) {
     HepMC3::GenEvent evt;
     rdr.read_event(evt);
 
-    if(rdr.failed()){
+    if (rdr.failed()) {
       break;
     }
-    
+
     HepMC3::Print::listing(evt);
 
     std::vector<double> projections;
     bool passed = prcs.filter_and_project(evt, projections);
 
-    std::cout << "Event: " << (passed ? "passed selection":"was cut") << std::endl;
-    std::cout << "Projections: " << std::endl;
-    for(auto &i : projections){
-      std::cout << i << std::endl;
+    std::cout << "Event: " << (passed ? "passed selection" : "was cut")
+              << std::endl;
+    if (passed) {
+      std::cout << "Projections: " << std::endl;
+      for (auto &i : projections) {
+        std::cout << i << std::endl;
+      }
     }
     std::cout << "================" << std::endl;
   }
