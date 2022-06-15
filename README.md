@@ -111,37 +111,37 @@ end
 
 ```
 
-## ADL Reference
+## LuaADL Reference
 
 ### Selectors
 
 Functions that select particles and vertices from `GenEvent`s
 
 ```lua
-  -- ADL.sel.part
+  -- LuaADL.sel.part
   -- Return a reference to a particle, a nil return value denotes that none were found
   -------------------------------------------------------------------------------
-  ADL.sel.part.beam(event, 14) -- selects a single incoming particle with PDG 14
-  ADL.sel.part.beam(event, {12,14,16}) -- selects a single incoming particle with PDG 12, 14, or 16
+  LuaADL.sel.part.beam(event, 14) -- selects a single incoming particle with PDG 14
+  LuaADL.sel.part.beam(event, {12,14,16}) -- selects a single incoming particle with PDG 12, 14, or 16
 
-  ADL.sel.part.out.first(event, 13) -- selects the first undecayed physical outgoing particle with PDG 13
-  ADL.sel.part.out.first(event, {11,13,15}) -- selects the first undecayed physical outgoing particle with PDG 11, 13, or 15
+  LuaADL.sel.part.out.first(event, 13) -- selects the first undecayed physical outgoing particle with PDG 13
+  LuaADL.sel.part.out.first(event, {11,13,15}) -- selects the first undecayed physical outgoing particle with PDG 11, 13, or 15
 
-  ADL.sel.part.out.highest_momentum(event, 14) -- selects the highest momentum undecayed physical outgoing particle with PDG 13
-  ADL.sel.part.out.highest_momentum(event, {12,14,16}) -- selects the first highest momentum physical outgoing particle with PDG 11, 13, or 15
+  LuaADL.sel.part.out.highest_momentum(event, 14) -- selects the highest momentum undecayed physical outgoing particle with PDG 13
+  LuaADL.sel.part.out.highest_momentum(event, {12,14,16}) -- selects the first highest momentum physical outgoing particle with PDG 11, 13, or 15
   -------------------------------------------------------------------------------
 
-  -- ADL.sel.parts
+  -- LuaADL.sel.parts
   -- Return a sequence of particles, empty sequence denotes that none were found
   -------------------------------------------------------------------------------
-  ADL.sel.parts.beam(event, 14) -- selects all incoming particles with PDG 14
-  ADL.sel.parts.beam(event, {12,14,16}) -- selects all incoming particles with PDG 12, 14, or 16
+  LuaADL.sel.parts.beam(event, 14) -- selects all incoming particles with PDG 14
+  LuaADL.sel.parts.beam(event, {12,14,16}) -- selects all incoming particles with PDG 12, 14, or 16
 
-  ADL.sel.parts.out(event, 14) -- selects all undecayed physical outgoing particles with PDG 14
-  ADL.sel.parts.out(event, {12,14,16}) -- selects all undecayed physical outgoing particles with PDG 12, 14, or 16
+  LuaADL.sel.parts.out(event, 14) -- selects all undecayed physical outgoing particles with PDG 14
+  LuaADL.sel.parts.out(event, {12,14,16}) -- selects all undecayed physical outgoing particles with PDG 12, 14, or 16
 
-  ADL.sel.parts.other_out(event, 14)  -- selects all undecayed physical outgoing particles with any PDG other than 14
-  ADL.sel.parts.other_out(event, {12,14,16})  -- selects all undecayed physical outgoing particles with any PDG other than 12, 14, or 16
+  LuaADL.sel.parts.other_out(event, 14)  -- selects all undecayed physical outgoing particles with any PDG other than 14
+  LuaADL.sel.parts.other_out(event, {12,14,16})  -- selects all undecayed physical outgoing particles with any PDG other than 12, 14, or 16
   -------------------------------------------------------------------------------
 
 ```
@@ -155,27 +155,27 @@ Functions that project out kinematic quantities from particles or sequences of p
 
   -- Two particle functions
   ----------------
-  ADL.proj.parts.q0(part1, part2) -- calculate the energy transfer between two particles
-  ADL.proj.parts.q0({part1, part2, ...}) -- calculate the energy transfer between the first two particles in a sequence
+  LuaADL.proj.parts.q0(part1, part2) -- calculate the energy transfer between two particles
+  LuaADL.proj.parts.q0({part1, part2, ...}) -- calculate the energy transfer between the first two particles in a sequence
 
-  ADL.proj.parts.q3(part1, part2) -- calculate the 3momentum transfer between two particles
-  ADL.proj.parts.q3({part1, part2, ...}) -- calculate the 3momentum transfer between the first two particles in a sequence
+  LuaADL.proj.parts.q3(part1, part2) -- calculate the 3momentum transfer between two particles
+  LuaADL.proj.parts.q3({part1, part2, ...}) -- calculate the 3momentum transfer between the first two particles in a sequence
 
-  ADL.proj.parts.Q2(part1, part2) -- calculate the 4momentum transfer between two particles
-  ADL.proj.parts.Q2({part1, part2, ...}) -- calculate the 4momentum transfer between the first two particles in a sequence
+  LuaADL.proj.parts.Q2(part1, part2) -- calculate the 4momentum transfer between two particles
+  LuaADL.proj.parts.Q2({part1, part2, ...}) -- calculate the 4momentum transfer between the first two particles in a sequence
 
-  ADL.proj.parts.theta(part1, part2) -- calculate the opening angle between two particles
-  ADL.proj.parts.theta({part1, part2, ...}) -- calculate the opening angle between the first two particles in a sequence
+  LuaADL.proj.parts.theta(part1, part2) -- calculate the opening angle between two particles
+  LuaADL.proj.parts.theta({part1, part2, ...}) -- calculate the opening angle between the first two particles in a sequence
 
-  ADL.proj.parts.costheta(part1, part2) -- calculate the cosine of the opening angle between two particles
-  ADL.proj.parts.costheta({part1, part2, ...}) -- calculate the cosine of the opening angle between the first two particles in a sequence
+  LuaADL.proj.parts.costheta(part1, part2) -- calculate the cosine of the opening angle between two particles
+  LuaADL.proj.parts.costheta({part1, part2, ...}) -- calculate the cosine of the opening angle between the first two particles in a sequence
 
   -- N particle functions
   ----------------
-  ADL.proj.parts.W({part1, part2, ...}) -- calculate the invariant mass of a sequence of particles
-  ADL.proj.parts.pt({part1, part2, ...}) -- calculate the magnitude of the transverse momentum from the 3momentum sum of a sequence of particles
+  LuaADL.proj.parts.W({part1, part2, ...}) -- calculate the invariant mass of a sequence of particles
+  LuaADL.proj.parts.pt({part1, part2, ...}) -- calculate the magnitude of the transverse momentum from the 3momentum sum of a sequence of particles
 
   -- Returns a HepMC3::FourVector, pmiss.x == 0xdeadbeef for failure 
-  ADL.proj.parts.pmiss({part1, part2, ...}, {part1, part2, ...}) -- calculate the missing 4momentum between two sequences of particles
+  LuaADL.proj.parts.pmiss({part1, part2, ...}, {part1, part2, ...}) -- calculate the missing 4momentum between two sequences of particles
 
 ```
