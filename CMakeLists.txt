@@ -134,5 +134,6 @@ endif()
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
-add_executable(ProcessorTest test/ProcessorTest.cxx)
-target_link_libraries(ProcessorTest HepMC3 sol2)
+include(CTest)
+add_subdirectory(test/HepMC3)
+
