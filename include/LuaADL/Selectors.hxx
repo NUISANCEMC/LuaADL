@@ -106,11 +106,12 @@ public:
     lua["LuaADL"]["sel"]["parts"]["beam"] = sol::overload(
         &particles_1pdg<kBeam, kFromPDGList>, &particles<kBeam, kFromPDGList>);
 
-    lua["LuaADL"]["sel"]["part"]["out"] = lua.create_table();
-    lua["LuaADL"]["sel"]["part"]["out"]["highest_momentum"] =
+    lua["LuaADL"]["sel"]["part"]["highest_momentum"] = lua.create_table();
+    lua["LuaADL"]["sel"]["part"]["first"] = lua.create_table();
+    lua["LuaADL"]["sel"]["part"]["highest_momentum"]["out"] =
         sol::overload(&particle_1pdg<kUndecayedPhysical, kHighestMomentum>,
                       &particle<kUndecayedPhysical, kHighestMomentum>);
-    lua["LuaADL"]["sel"]["part"]["out"]["first"] =
+    lua["LuaADL"]["sel"]["part"]["first"]["out"] =
         sol::overload(&particle_1pdg<kUndecayedPhysical, kFirst>,
                       &particle<kUndecayedPhysical, kFirst>);
 

@@ -41,7 +41,6 @@ inline sol::usertype<GenParticle> RegisterGenParticle(sol::state &lua) {
       sol::resolve<std::vector<ConstGenParticlePtr>() const>(
           &GenParticle::children);
 
-  GenParticle_type["unset_generated_mass"] = &GenParticle::unset_generated_mass;
   GenParticle_type["is_generated_mass_set"] =
       &GenParticle::is_generated_mass_set;
 
