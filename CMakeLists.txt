@@ -92,6 +92,7 @@ if(lua_ADDED)
   file(GLOB lua_sources ${lua_SOURCE_DIR}/*.c)
   list(REMOVE_ITEM lua_sources "${lua_SOURCE_DIR}/lua.c" "${lua_SOURCE_DIR}/luac.c")
   add_library(lua STATIC ${lua_sources})
+  target_link_libraries(lua INTERFACE -Wl,--allow-multiple-definition)
 
   target_include_directories(lua SYSTEM PUBLIC $<BUILD_INTERFACE:${lua_SOURCE_DIR}>)
 endif()
@@ -136,4 +137,5 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 
 include(CTest)
 add_subdirectory(test/HepMC3)
+add_subdirectory(test/LuaADL)
 
