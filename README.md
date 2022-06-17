@@ -309,3 +309,15 @@ Functions that project out kinematic quantities from particles or sequences of p
   LuaADL.proj.parts.pmiss({part1, part2, ...}, {part1, part2, ...}) -- calculate the missing 4momentum between two sequences of particles
 
 ```
+
+## A Simple Profile
+
+The result of running the `Profile` test in `test/LuaADL` might give something like the below output. As you can see invoking LuaADL is an order of magnitude slower than invoking the same C++ functions directly, but given the dynamic flexibility that it offers, and the fact that you usually are not re-selecting/re-projecting the same events many times, it is probable that such a slowdown is acceptable.
+
+```
+[INFO]: Read 100000 events  in 0.445 s.
+[INFO]: C++ Selected 60176/100000 events  in 0.457 s.
+[INFO]: Lua No-Op'd through 100000 events  in 0.614 s.
+[INFO]: LuaADL Selected 60176/100000 events  in 0.832 s.
+[INFO]: Lua Selected 60176/100000 events  in 0.894 s.
+```
