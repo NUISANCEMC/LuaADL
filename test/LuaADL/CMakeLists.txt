@@ -5,7 +5,7 @@ file(COPY
 		MiniBooNE_CH2_numu.hepmc3 
 	DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-foreach(t Profile ProcessorScoping ProcessorFunctionExistanceChecks)
+foreach(t ProcessorScoping ProcessorFunctionExistanceChecks ProcessorLiteralOrFromFile Profile)
 	add_executable(${t} ${t}.cxx)
 	target_link_libraries(${t} HepMC3 sol2)
 	add_test(NAME ${t}
