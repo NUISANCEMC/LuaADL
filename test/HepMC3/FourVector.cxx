@@ -5,15 +5,18 @@
 
 int main(int argc, char const *argv[]) {
 
+  sol::state lua;
+  lua.open_libraries();
   HepMC3::LuaInterface LI;
+  LI.RegisterLuaFunctions(lua);
 
-  LI.lua["fvtest"] = HepMC3::FourVector(1.234,5.678,9.101,1.121);
-  LI.lua["fvxy"] = HepMC3::FourVector(3,4,0,0);
-  LI.lua["fvxe"] = HepMC3::FourVector(4,0,0,5);
-  LI.lua["fvxz"] = HepMC3::FourVector(0,1,1,0);
-  LI.lua["fvzero"] = HepMC3::FourVector();
+  lua["fvtest"] = HepMC3::FourVector(1.234,5.678,9.101,1.121);
+  lua["fvxy"] = HepMC3::FourVector(3,4,0,0);
+  lua["fvxe"] = HepMC3::FourVector(4,0,0,5);
+  lua["fvxz"] = HepMC3::FourVector(0,1,1,0);
+  lua["fvzero"] = HepMC3::FourVector();
 
-  LI.lua.safe_script(R"(
+  lua.safe_script(R"(
     io.write(string.format("fvtest.x = %s\n", fvtest.x))
     assert(fvtest.x == 1.234)
     io.write(string.format("fvtest.y = %s\n", fvtest.y))

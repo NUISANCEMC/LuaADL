@@ -1,17 +1,16 @@
 #pragma once
 
-#include "HepMC3/Lua/GenRunInfo.hxx"
 #include "HepMC3/Lua/Attribute.hxx"
 #include "HepMC3/Lua/FourVector.hxx"
-#include "HepMC3/Lua/GenParticle.hxx"
-#include "HepMC3/Lua/GenVertex.hxx"
 #include "HepMC3/Lua/GenEvent.hxx"
+#include "HepMC3/Lua/GenParticle.hxx"
+#include "HepMC3/Lua/GenRunInfo.hxx"
+#include "HepMC3/Lua/GenVertex.hxx"
 
 #include "sol/sol.hpp"
 
 namespace HepMC3 {
 struct LuaInterface {
-  sol::state lua;
 
   AttributeTypes Attribute_types;
   sol::usertype<FourVector> FourVector_type;
@@ -20,9 +19,8 @@ struct LuaInterface {
   sol::usertype<GenEvent> GenEvent_type;
   sol::usertype<GenVertex> GenVertex_type;
 
-  LuaInterface() {
-    lua.open_libraries();
-
+  LuaInterface() {}
+  void RegisterLuaFunctions(sol::state &lua) {
     Attribute_types = RegisterAttributes(lua);
     GenRuninfo_types = RegisterGenRunInfo(lua);
 

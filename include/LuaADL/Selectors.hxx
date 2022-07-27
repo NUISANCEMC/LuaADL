@@ -92,8 +92,10 @@ public:
                                                      });
   }
 
-  Selectors(sol::state &lua) {
-    if (!lua["LuaADL"]) {
+  Selectors(){}
+
+  void RegisterLuaFunctions(sol::state &lua) {
+    if (!lua["LuaADL"].valid()) {
       lua["LuaADL"] = lua.create_table();
     }
     lua["LuaADL"]["sel"] = lua.create_table();

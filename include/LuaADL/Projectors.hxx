@@ -148,8 +148,10 @@ public:
     return fv_out - fv_in;
   }
 
-  Projectors(sol::state &lua) {
-    if (!lua["LuaADL"]) {
+  Projectors(){}
+
+  void RegisterLuaFunctions(sol::state &lua) {
+    if (!lua["LuaADL"].valid()) {
       lua["LuaADL"] = lua.create_table();
     }
 

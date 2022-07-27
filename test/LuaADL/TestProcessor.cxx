@@ -1,4 +1,4 @@
-#include "LuaADL/Processor.hxx"
+#include "LuaADL/Engine.hxx"
 
 #include "HepMC3/ReaderAscii.h"
 #include "HepMC3/WriterAscii.h"
@@ -106,7 +106,9 @@ int main(int argc, char *const argv[]) {
 
   HepMC3::ReaderAscii rdr(ss);
 
-  LuaADL::Processor prcs(argv[1]);
+  LuaADL::Engine evt_eng;
+  auto processor_id = evt_eng.AddProcessor(argv[1]);
+  auto prcs = evt_eng.Processor(processor_id);
 
   std::cout << "Has filter: " << prcs.has_filter() << std::endl;
   std::cout << "Has Project: " << prcs.has_project() << std::endl;

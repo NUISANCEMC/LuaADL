@@ -1,4 +1,4 @@
-#include "LuaADL/Processor.hxx"
+#include "LuaADL/Engine.hxx"
 
 #include "HepMC3/ReaderAscii.h"
 
@@ -86,7 +86,10 @@ int main(int argc, char *const argv[]) {
 
   {
     HepMC3::ReaderAscii rdr("MiniBooNE_CH2_numu.hepmc3");
-    LuaADL::Processor prcs("noop.lua");
+
+    LuaADL::Engine evt_eng;
+    auto processor_id = evt_eng.AddProcessorFromFile("noop.lua");
+    auto prcs = evt_eng.Processor(processor_id);
 
     size_t nevents = 0, nselected = 0;
 
@@ -119,7 +122,10 @@ int main(int argc, char *const argv[]) {
 
   {
     HepMC3::ReaderAscii rdr("MiniBooNE_CH2_numu.hepmc3");
-    LuaADL::Processor prcs("MiniBooNE_sel_LuaADL.lua");
+
+    LuaADL::Engine evt_eng;
+    auto processor_id = evt_eng.AddProcessorFromFile("MiniBooNE_sel_LuaADL.lua");
+    auto prcs = evt_eng.Processor(processor_id);
 
     size_t nevents = 0, nselected = 0;
 
@@ -153,7 +159,10 @@ int main(int argc, char *const argv[]) {
 
   {
     HepMC3::ReaderAscii rdr("MiniBooNE_CH2_numu.hepmc3");
-    LuaADL::Processor prcs("MiniBooNE_sel_imperative.lua");
+
+    LuaADL::Engine evt_eng;
+    auto processor_id = evt_eng.AddProcessorFromFile("MiniBooNE_sel_imperative.lua");
+    auto prcs = evt_eng.Processor(processor_id);
 
     size_t nevents = 0, nselected = 0;
 

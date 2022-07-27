@@ -1,8 +1,5 @@
 #pragma once
 
-#include "LuaADL/Selectors.hxx"
-#include "LuaADL/Projectors.hxx"
-
 #include "HepMC3/LuaInterface.hxx"
 
 #include "HepMC3/GenEvent.h"
@@ -10,47 +7,66 @@
 namespace LuaADL {
 class Processor {
 
-  HepMC3::LuaInterface LI;
-  Projectors Pj;
-  Selectors Sl;
-
   sol::function filter_function;
   sol::function project_function;
   sol::function weight_function;
   sol::function filter_and_project_function;
 
-public:
-  Processor(std::string const &filename) : Pj(LI.lua), Sl(LI.lua) {
-    LI.lua.safe_script_file(filename);
-
-    filter_function = LI.lua["filter"];
-    project_function = LI.lua["project"];
-    weight_function = LI.lua["weight"];
-    filter_and_project_function = LI.lua["filter_and_project"];
+  bool has_filter_and_project_function() const {
+    return filter_and_project_function.valid();
   }
 
-  bool has_filter() { return bool(filter_function); }
+public:
+  enum class ScriptType { file, literal };
 
-  bool filter(HepMC3::GenEvent const &ev) { return filter_function(ev); }
+  Processor(sol::state &lua, std::string const &script,
+            ScriptType t = ScriptType::file)
+      : filter_function(sol::lua_nil), project_function(sol::lua_nil),
+        weight_function(sol::lua_nil),
+        filter_and_project_function(sol::lua_nil) {
 
-  bool has_project() { return bool(project_function); }
-  std::vector<double> project(HepMC3::GenEvent const &ev) {
+    switch (t) {
+    case ScriptType::file: {
+      lua.safe_script_file(script);
+      break;
+    }
+    case ScriptType::literal: {
+      lua.safe_script(script);
+      break;
+    }
+    }
+
+    filter_function = lua["filter"];
+    project_function = lua["project"];
+    weight_function = lua["weight"];
+    filter_and_project_function = lua["filter_and_project"];
+  }
+
+  bool has_filter() const { return filter_function.valid(); }
+
+  bool filter(HepMC3::GenEvent const &ev) const { return filter_function(ev); }
+
+  bool has_project() const { return project_function.valid(); }
+  std::vector<double> project(HepMC3::GenEvent const &ev) const {
     std::vector<double> projections;
     project_function(ev, projections);
     return projections;
   }
 
-  bool has_weight() { return bool(weight_function); }
-  std::vector<double> weight(HepMC3::GenEvent const &ev) {
+  bool has_weight() const { return weight_function.valid(); }
+  std::vector<double> weight(HepMC3::GenEvent const &ev) const {
     std::vector<double> weights;
     weight_function(ev, weights);
     return weights;
   }
 
-  bool has_filter_and_project() { return bool(filter_and_project_function); }
+  bool has_filter_and_project() const {
+    return has_filter_and_project_function() || (has_filter() && has_project());
+  }
+
   bool filter_and_project(HepMC3::GenEvent const &ev,
-                          std::vector<double> &out_projections) {
-    if (!has_filter_and_project() && (has_filter() && has_project())) {
+                          std::vector<double> &out_projections) const {
+    if (!has_filter_and_project_function() && (has_filter() && has_project())) {
       if (!filter(ev)) {
         return false;
       } else {
