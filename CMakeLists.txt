@@ -83,6 +83,7 @@ CPMAddPackage(
   NAME lua
   GIT_REPOSITORY https://github.com/lua/lua.git
   VERSION 5.4.4
+  GIT_TAG v5.4.4
   DOWNLOAD_ONLY YES
 )
 
@@ -90,16 +91,22 @@ if(lua_ADDED)
   # lua has no CMakeLists, so we create our own target
 
   file(GLOB lua_sources ${lua_SOURCE_DIR}/*.c)
-  list(REMOVE_ITEM lua_sources "${lua_SOURCE_DIR}/lua.c" "${lua_SOURCE_DIR}/luac.c")
-  add_library(lua STATIC ${lua_sources})
+  list(REMOVE_ITEM lua_sources 
+    "${lua_SOURCE_DIR}/lua.c" 
+    "${lua_SOURCE_DIR}/luac.c" 
+    "${lua_SOURCE_DIR}/onelua.c")
 
+  add_library(lua STATIC ${lua_sources})
+  target_compile_options(lua PRIVATE -fPIC)
   target_include_directories(lua SYSTEM PUBLIC $<BUILD_INTERFACE:${lua_SOURCE_DIR}>)
+
 endif()
 
 CPMAddPackage(
   NAME sol2
-  URL https://github.com/ThePhD/sol2/archive/v3.2.2.zip
-  VERSION 3.2.2
+  GIT_REPOSITORY https://github.com/ThePhD/sol2.git
+  VERSION 3.2.3
+  GIT_TAG v3.2.3
   DOWNLOAD_ONLY YES
 )
 
@@ -109,30 +116,26 @@ if(sol2_ADDED)
   target_link_libraries(sol2 INTERFACE lua)
 endif()
 
-# CPMFindPackage(
-#     NAME fmt
-#     GIT_TAG 8.1.1
-#     GITHUB_REPOSITORY fmtlib/fmt
-# )
+CPMAddPackage(
+    NAME HepMC3
+    VERSION 3.2.5
+    GIT_REPOSITORY "https://gitlab.cern.ch/hepmc/HepMC3.git"
+    GIT_TAG 3.2.5
+    OPTIONS
+      "HEPMC3_CXX_STANDARD ${CMAKE_CXX_STANDARD}"
+      "HEPMC3_ENABLE_SEARCH OFF"
+      "HEPMC3_ENABLE_ROOTIO OFF"
+      "HEPMC3_ENABLE_PROTOBUFIO OFF"
+      "HEPMC3_ENABLE_PYTHON OFF"
+      "HEPMC3_BUILD_DOCS OFF"
+      "HEPMC3_BUILD_EXAMPLES OFF"
+      "HEPMC3_INSTALL_EXAMPLES OFF"
+      "HEPMC3_ENABLE_TEST OFF"
+      "HEPMC3_INSTALL_INTERFACES OFF"
+      "HEPMC3_BUILD_STATIC_LIBS OFF"
+)
 
-# CPMFindPackage(
-#     NAME spdlog
-#     GIT_TAG "v1.10.0"
-#     GITHUB_REPOSITORY gabime/spdlog
-#     OPTIONS
-#         "SPDLOG_COMPILED_LIB ON"
-#         "SPDLOG_FMT_EXTERNAL ON"
-#         "SPDLOG_BUILD_SHARED ON"
-# )
-
-find_package(HepMC3 REQUIRED)
-if(HepMC3_FOUND)
-  add_library(HepMC3 INTERFACE IMPORTED)
-  target_include_directories(HepMC3 SYSTEM INTERFACE ${HEPMC3_INCLUDE_DIR})
-  target_link_libraries(HepMC3 INTERFACE ${HEPMC3_LIBRARIES})
-endif()
-
-include_directories(${CMAKE_SOURCE_DIR}/include)
+add_subdirectory(src)
 
 include(CTest)
 add_subdirectory(test/HepMC3)

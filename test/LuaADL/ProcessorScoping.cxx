@@ -20,7 +20,7 @@ int main(int argc, char *const argv[]) {
                         std::make_shared<HepMC3::IntAttribute>(1));
 
   LuaADL::Engine evt_eng;
-  auto prcs1 = evt_eng.Processor(evt_eng.AddProcessorLiteral(R"(
+  auto prcs1 = evt_eng.GetProcessor(evt_eng.AddProcessorLiteral(R"(
       function filter_and_project(in_GenEvent, out_projections)
 
         out_projections:add(1)
@@ -29,7 +29,7 @@ int main(int argc, char *const argv[]) {
       end
       )"));
 
-  auto prcs2 = evt_eng.Processor(evt_eng.AddProcessorLiteral(R"(
+  auto prcs2 = evt_eng.GetProcessor(evt_eng.AddProcessorLiteral(R"(
       function filter_and_project(in_GenEvent, out_projections)
 
         out_projections:add(2)
@@ -38,7 +38,7 @@ int main(int argc, char *const argv[]) {
       end
       )"));
 
-  auto prcs3 = evt_eng.Processor(evt_eng.AddProcessorLiteral(R"(
+  auto prcs3 = evt_eng.GetProcessor(evt_eng.AddProcessorLiteral(R"(
       function filter_and_project(in_GenEvent, out_projections)
 
         out_projections:add(3)

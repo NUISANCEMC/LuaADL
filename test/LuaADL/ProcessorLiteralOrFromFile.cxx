@@ -15,7 +15,7 @@ int main(int argc, char *const argv[]) {
 
     auto processor_id =
         evt_eng.AddProcessorFromFile("MiniBooNE_sel_LuaADL.lua");
-    auto prcs = evt_eng.Processor(processor_id);
+    auto prcs = evt_eng.GetProcessor(processor_id);
 
     auto lua_selproj_before = std::chrono::high_resolution_clock::now();
     while (!rdr.failed()) {
@@ -71,7 +71,7 @@ int main(int argc, char *const argv[]) {
             return true
             
           end)");
-    auto prcs = evt_eng.Processor(processor_id);
+    auto prcs = evt_eng.GetProcessor(processor_id);
 
 
     auto lua_selproj_before = std::chrono::high_resolution_clock::now();

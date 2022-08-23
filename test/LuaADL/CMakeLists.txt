@@ -7,7 +7,7 @@ file(COPY
 
 foreach(t ProcessorScoping ProcessorFunctionExistanceChecks ProcessorLiteralOrFromFile Profile)
 	add_executable(${t} ${t}.cxx)
-	target_link_libraries(${t} HepMC3 sol2)
+	target_link_libraries(${t} LuaADL)
 	add_test(NAME ${t}
 	         COMMAND ${t})
 

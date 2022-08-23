@@ -22,7 +22,7 @@ int main(int argc, char *const argv[]) {
                         std::make_shared<HepMC3::IntAttribute>(1));
 
   {
-    auto prcs1 = evt_eng.Processor(evt_eng.AddProcessorLiteral(R"(
+    auto prcs1 = evt_eng.GetProcessor(evt_eng.AddProcessorLiteral(R"(
         function filter_and_project(in_GenEvent, out_projections)
   
           out_projections:add(1)
@@ -43,7 +43,7 @@ int main(int argc, char *const argv[]) {
   }
 
   {
-    auto prcs2 = evt_eng.Processor(evt_eng.AddProcessorLiteral(R"(
+    auto prcs2 = evt_eng.GetProcessor(evt_eng.AddProcessorLiteral(R"(
         function filter(in_GenEvent)
           return true
         end
@@ -59,7 +59,7 @@ int main(int argc, char *const argv[]) {
   }
 
   {
-    auto prcs3 = evt_eng.Processor(evt_eng.AddProcessorLiteral(R"(
+    auto prcs3 = evt_eng.GetProcessor(evt_eng.AddProcessorLiteral(R"(
         function project(in_GenEvent, out_projections)
           out_projections:add(2)
         end
@@ -76,7 +76,7 @@ int main(int argc, char *const argv[]) {
   }
 
   {
-    auto prcs4 = evt_eng.Processor(evt_eng.AddProcessorLiteral(R"(
+    auto prcs4 = evt_eng.GetProcessor(evt_eng.AddProcessorLiteral(R"(
         function filter(in_GenEvent)
           return true
         end
@@ -98,7 +98,7 @@ int main(int argc, char *const argv[]) {
   }
 
   {
-    auto prcs5 = evt_eng.Processor(evt_eng.AddProcessorLiteral(R"(
+    auto prcs5 = evt_eng.GetProcessor(evt_eng.AddProcessorLiteral(R"(
         function weight(in_GenEvent, weights)
           weights:add(4)
         end

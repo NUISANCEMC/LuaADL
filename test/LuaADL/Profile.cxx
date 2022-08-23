@@ -1,5 +1,7 @@
 #include "LuaADL/Engine.hxx"
 
+#include "LuaADL/Selectors.ixx"
+
 #include "HepMC3/ReaderAscii.h"
 
 #include <chrono>
@@ -47,23 +49,19 @@ int main(int argc, char *const argv[]) {
 
       std::vector<double> projections;
 
-      auto ISnu =
-          LuaADL::Selectors::particle_1pdg<LuaADL::Selectors::kBeam,
-                                           LuaADL::Selectors::kFirst>(evt, 14);
+      auto ISnu = LuaADL::particle_1pdg<LuaADL::kBeam, LuaADL::kFirst>(evt, 14);
       if (!ISnu) {
         continue;
       }
-      auto FSmus = LuaADL::Selectors::particles_1pdg<
-          LuaADL::Selectors::kUndecayedPhysical,
-          LuaADL::Selectors::kFromPDGList>(evt, 13);
+      auto FSmus = LuaADL::particles_1pdg<LuaADL::kUndecayedPhysical,
+                                          LuaADL::kFromPDGList>(evt, 13);
       if (FSmus.size() != 1) {
         continue;
       }
 
       auto FSOther =
-          LuaADL::Selectors::particles<LuaADL::Selectors::kUndecayedPhysical,
-                                       LuaADL::Selectors::kNotFromPDGList>(
-              evt, {13, 2212, 2112});
+          LuaADL::particles<LuaADL::kUndecayedPhysical,
+                            LuaADL::kNotFromPDGList>(evt, {13, 2212, 2112});
       if (FSOther.size()) {
         continue;
       }
@@ -89,7 +87,7 @@ int main(int argc, char *const argv[]) {
 
     LuaADL::Engine evt_eng;
     auto processor_id = evt_eng.AddProcessorFromFile("noop.lua");
-    auto prcs = evt_eng.Processor(processor_id);
+    auto prcs = evt_eng.GetProcessor(processor_id);
 
     size_t nevents = 0, nselected = 0;
 
@@ -124,8 +122,9 @@ int main(int argc, char *const argv[]) {
     HepMC3::ReaderAscii rdr("MiniBooNE_CH2_numu.hepmc3");
 
     LuaADL::Engine evt_eng;
-    auto processor_id = evt_eng.AddProcessorFromFile("MiniBooNE_sel_LuaADL.lua");
-    auto prcs = evt_eng.Processor(processor_id);
+    auto processor_id =
+        evt_eng.AddProcessorFromFile("MiniBooNE_sel_LuaADL.lua");
+    auto prcs = evt_eng.GetProcessor(processor_id);
 
     size_t nevents = 0, nselected = 0;
 
@@ -161,8 +160,9 @@ int main(int argc, char *const argv[]) {
     HepMC3::ReaderAscii rdr("MiniBooNE_CH2_numu.hepmc3");
 
     LuaADL::Engine evt_eng;
-    auto processor_id = evt_eng.AddProcessorFromFile("MiniBooNE_sel_imperative.lua");
-    auto prcs = evt_eng.Processor(processor_id);
+    auto processor_id =
+        evt_eng.AddProcessorFromFile("MiniBooNE_sel_imperative.lua");
+    auto prcs = evt_eng.GetProcessor(processor_id);
 
     size_t nevents = 0, nselected = 0;
 
