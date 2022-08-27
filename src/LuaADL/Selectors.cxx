@@ -33,5 +33,13 @@ void Selectors::RegisterLuaFunctions(sol::state &lua) {
   lua["LuaADL"]["sel"]["parts"]["other_out"] =
       sol::overload(&particles_1pdg<kUndecayedPhysical, kNotFromPDGList>,
                     &particles<kUndecayedPhysical, kNotFromPDGList>);
+
+  lua["LuaADL"]["sel"]["part"]["highest_momentum"]["status"] =
+      sol::overload(&particle_status_1pdg<kHighestMomentum>,
+                    &particle_status<kHighestMomentum>);
+  lua["LuaADL"]["sel"]["part"]["first"]["status"] =
+      sol::overload(&particle_status_1pdg<kFirst>, &particle_status<kFirst>);
+  lua["LuaADL"]["sel"]["parts"]["status"] = sol::overload(
+      &particles_status_1pdg<kFromPDGList>, &particles_status<kFromPDGList>);
 }
 } // namespace LuaADL

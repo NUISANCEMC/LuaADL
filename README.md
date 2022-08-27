@@ -259,6 +259,12 @@ Functions that select particles from `GenEvent`s
 
   LuaADL.sel.part.highest_momentum.out(event, 14) -- selects the highest momentum undecayed physical outgoing particle with PDG 13
   LuaADL.sel.part.highest_momentum.out(event, {12,14,16}) -- selects the first highest momentum physical outgoing particle with PDG 11, 13, or 15
+
+  LuaADL.sel.part.first.status(event, 20, 13) -- selects the first status code 20 particle with PDG 13
+  LuaADL.sel.part.first.status(event, 20, {11,13,15}) -- selects the first status code 20 particle with PDG 11, 13, or 15
+
+  LuaADL.sel.part.highest_momentum.status(event, 20, 14) -- selects the highest momentum status code 20 particle with PDG 13
+  LuaADL.sel.part.highest_momentum.status(event, 20, {12,14,16}) -- selects the first highest momentum status code 20 particle with PDG 11, 13, or 15
   -------------------------------------------------------------------------------
 
   -- LuaADL.sel.parts
@@ -272,6 +278,9 @@ Functions that select particles from `GenEvent`s
 
   LuaADL.sel.parts.other_out(event, 14)  -- selects all undecayed physical outgoing particles with any PDG other than 14
   LuaADL.sel.parts.other_out(event, {12,14,16})  -- selects all undecayed physical outgoing particles with any PDG other than 12, 14, or 16
+
+  LuaADL.sel.parts.status(event, 20, 14) -- selects all status code 20 particles with PDG 14
+  LuaADL.sel.parts.status(event, 20, {12,14,16}) -- selects all status code 20 particles with PDG 12, 14, or 16
   -------------------------------------------------------------------------------
 
 ```

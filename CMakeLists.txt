@@ -28,9 +28,9 @@ cmake_minimum_required (VERSION 3.14 FATAL_ERROR)
 find_program(CMAKE_C_COMPILER NAMES $ENV{CC} gcc PATHS ENV PATH NO_DEFAULT_PATH)
 find_program(CMAKE_CXX_COMPILER NAMES $ENV{CXX} g++ PATHS ENV PATH NO_DEFAULT_PATH)
 
-project(NUISANCE_LuaADL)
+project(NuHepMC_LuaADL)
 
-set (NUISANCE_LuaADL_VERSION 0.0.1)
+set (NuHepMC_LuaADL_VERSION 0.1.0)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -79,7 +79,7 @@ ENDIF("${isSystemDir}" STREQUAL "-1")
 
 include(CPM)
 
-CPMAddPackage(
+CPMFindPackage(
   NAME lua
   GIT_REPOSITORY https://github.com/lua/lua.git
   VERSION 5.4.4
@@ -102,7 +102,7 @@ if(lua_ADDED)
 
 endif()
 
-CPMAddPackage(
+CPMFindPackage(
   NAME sol2
   GIT_REPOSITORY https://github.com/ThePhD/sol2.git
   VERSION 3.2.3
@@ -116,7 +116,7 @@ if(sol2_ADDED)
   target_link_libraries(sol2 INTERFACE lua)
 endif()
 
-CPMAddPackage(
+CPMFindPackage(
     NAME HepMC3
     VERSION 3.2.5
     GIT_REPOSITORY "https://gitlab.cern.ch/hepmc/HepMC3.git"
@@ -137,7 +137,8 @@ CPMAddPackage(
 
 add_subdirectory(src)
 
-include(CTest)
-add_subdirectory(test/HepMC3)
-add_subdirectory(test/LuaADL)
-
+if(LuaADL_TESTS_ENABLED)
+  include(CTest)
+  add_subdirectory(test/HepMC3)
+  add_subdirectory(test/LuaADL)
+endif()
